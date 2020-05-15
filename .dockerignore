@@ -1,0 +1,14 @@
+.git
+.gitignore
+
+compose/backend/Dockerfile
+compose/database/Dockerfile
+backend/src
+backend/node_modules
+backend/nodemon.json
+backend/tsconfig.json
+
+.dockerignore
+docker-compose.yml
+
+README.md

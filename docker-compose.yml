@@ -1,0 +1,45 @@
+version: '3.1'
+
+volumes:
+  database_mysql_data: {}
+
+networks: 
+  database_awesome_library_network:
+    driver: bridge
+
+services: 
+  database:
+    build: 
+      context: .
+      dockerfile: ./compose/database/Dockerfile
+    image: awesome_library_development_database
+    container_name: database
+    volumes:
+      - database_mysql_data:/var/lib/mysql
+    env_file:
+      - ./.envs/.development/.database
+    networks:
+      - database_awesome_library_network
+    ports: 
+      - 3310:3306
+
+  backend:
+    build: 
+      context: .
+      dockerfile: ./compose/backend/Dockerfile
+    image: awesome_library_development_backend
+    container_name: backend
+    depends_on: 
+      - database
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/nodemon.json:/app/nodemon.json
+      - ./backend/tsconfig.json:/app/tsconfig.json
+    networks:
+      - database_awesome_library_network
+    env_file:
+      - ./.envs/.development/.backend
+      - ./.envs/.development/.database
+    ports:
+      - 8000:8000
+    command: /start
